@@ -1,5 +1,6 @@
 from abc import ABC, ABCMeta, abstractmethod
 import random
+from random import randint
 
 class Tabuleiro:
 
@@ -227,6 +228,14 @@ def criar_partida(nome: str, classe: str):
     inimigo = Inimigo("Orc")
 
     mapa.posicionar_personagem(heroi, 0, 0)
-    mapa.posicionar_personagem(inimigo, 1, 1)
+    
+    posicao_inimigo_x = randint(0, mapa.largura - 1)
+    posicao_inimigo_y = randint(0, mapa.altura - 1)
+    
+    if posicao_inimigo_x == 0 and posicao_inimigo_y == 0:
+        posicao_inimigo_x = (posicao_inimigo_x + 1) % mapa.largura
+        posicao_inimigo_y = (posicao_inimigo_y + 1) % mapa.altura
+    
+    mapa.posicionar_personagem(inimigo, posicao_inimigo_x, posicao_inimigo_y)
 
     return mapa, heroi, inimigo
