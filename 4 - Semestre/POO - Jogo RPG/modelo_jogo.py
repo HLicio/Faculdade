@@ -62,6 +62,9 @@ class Personagem(ABC):
     def get_nome(self):
         return self._nome
 
+    def get_subclasse(self):
+        return type(self).__name__
+
     def get_vida(self):
         return self._vida
 

@@ -15,8 +15,18 @@ def desenhar_tabuleiro(mapa):
             lista = mapa.entidades.get((x, y), [])
             jogadores_visiveis = [p for p in lista if not isinstance(p, Inimigo)]
 
-            if jogadores_visiveis:
-                linha += f"{jogadores_visiveis[0].get_nome()[0]} "
+            if jogadores_visiveis and jogadores_visiveis[0].get_subclasse() == "Guerreiro":
+                linha += '🗡️ '
+            
+            elif jogadores_visiveis and jogadores_visiveis[0].get_subclasse() == "Mago":
+                linha += '🪄 '
+            
+            elif jogadores_visiveis and jogadores_visiveis[0].get_subclasse() == "Sacerdote":
+                linha += '⚕️ '
+                
+            elif lista and isinstance(lista[0], Inimigo):
+                linha += '👹'
+                
             else:
                 linha += "· "
         linha += "║"
