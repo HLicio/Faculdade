@@ -8,11 +8,11 @@ Projeto acadêmico desenvolvido para a disciplina de **Programação Orientada a
 
 O projeto conta com duas implementações complementares que utilizam o mesmo motor de regras de POO:
 
-1. **Versão Terminal (CLI) — [`main.py`](./main.py)**:
+1. **Versão Terminal (CLI)**:
    - Renderização do tabuleiro e molduras em texto (ASCII).
    - Menu textual interativo para seleção de ações de combate.
-2. **Versão Interface Gráfica (GUI) — [`main2.py`](./main2.py)**:
-   - Interface visual desenvolvida com a biblioteca nativa `tkinter`.
+2. **Versão Interface Gráfica (GUI)**:
+  - Interface visual desenvolvida com CustomTkinter e organizada na classe `RPGApp` em [`interface_gui.py`](./interface_gui.py).
    - Grid interativo em Canvas com posicionamento do herói e inimigos.
    - Movimentação responsiva via teclado (`W`, `A`, `S`, `D`) e painel de combate com botões dinâmicos.
 
@@ -23,7 +23,7 @@ O projeto conta com duas implementações complementares que utilizam o mesmo mo
 O design do projeto foi concebido para demonstrar na prática os fundamentos de Orientação a Objetos:
 
 ### 1. Abstração e Classes Abstratas
-* A classe base **`Personagem`** (em [`classes.py`](./classes.py)) herda de `abc.ABC`, servindo como modelo primordial para qualquer entidade viva do jogo.
+* A classe base **`Personagem`** (em [`modelo_jogo.py`](./modelo_jogo.py)) herda de `abc.ABC`, servindo como modelo primordial para qualquer entidade viva do jogo.
 * Define os atributos essenciais (`_nome`, `_vida`, `ataque`, `defesa`, coordenadas `posicao_x` e `posicao_y`) e comportamentos universais (`receber_dano`, `receber_cura`, `mover`, `tentar_fugir`).
 
 ### 2. Encapsulamento
@@ -54,17 +54,15 @@ O design do projeto foi concebido para demonstrar na prática os fundamentos de 
 
 ### Pré-requisitos
 * Python 3.8 ou superior instalado.
-* Nenhuma biblioteca externa é necessária (utiliza bibliotecas padrão `tkinter`, `random`, `abc`).
+* A versão CLI usa apenas a biblioteca padrão.
+* A versão GUI requer `customtkinter`, `CTkMessagebox` e `Pillow`.
 
-### Executando a Versão Terminal:
+### Executando o jogo:
 ```bash
 python main.py
 ```
 
-### Executando a Versão Gráfica:
-```bash
-python main2.py
-```
+O programa perguntará se você deseja jogar na versão `CLI` ou `GUI`.
 
 ### Controles:
 * **W**: Mover para Cima
@@ -78,10 +76,12 @@ python main2.py
 
 ```text
 POO - Jogo RPG/
-├── classes.py      # Definição das classes, regras de POO, tabuleiro e combate
-├── main.py         # Loop principal do jogo na versão Terminal
-├── main2.py        # Interface gráfica com Tkinter e painéis interativos
-└── README.md       # Documentação do projeto
+├── modelo_jogo.py    # Classes, regras de POO, tabuleiro e combate
+├── interface_cli.py  # Interface do jogo na versão Terminal
+├── interface_gui.py  # Classe RPGApp e interface CustomTkinter
+├── main.py           # Launcher que escolhe entre CLI e GUI
+├── assets/           # Ícones dos personagens e inimigos
+└── README.md         # Documentação do projeto
 ```
 
 ---
