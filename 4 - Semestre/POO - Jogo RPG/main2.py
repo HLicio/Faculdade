@@ -1,24 +1,43 @@
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
 from classes import *
+from pathlib import Path
+from PIL import Image, ImageTk
 
 
 TAMANHO_CELULA = 30
 LARGURA = 15
 ALTURA = 15
+TAMANHO_ICONE = TAMANHO_CELULA - 4
+
+PASTA_ASSETS = Path(__file__).parent / "assets"
+
+janela = ctk.CTk()
+janela.title("RPG - Aventura")
+janela.resizable(False, False)
+
+
+def carregar_icone(nome):
+    imagem = Image.open(PASTA_ASSETS / nome).convert("RGBA")
+    imagem = imagem.resize(
+        (TAMANHO_ICONE, TAMANHO_ICONE),
+        Image.Resampling.LANCZOS
+    )
+    return ImageTk.PhotoImage(imagem)
+
+
+ICONES = {
+    "Guerreiro": carregar_icone("guerreiro.png"),
+    "Mago": carregar_icone("mago.png"),
+    "Sacerdote": carregar_icone("sarcedote.png"),
+    "Inimigo": carregar_icone("ORC.png"),
+}
 
 mapa = Tabuleiro(LARGURA, ALTURA)
 
 heroi = None
 em_combate = False
 inimigo_atual = None
-
-
-
-janela = ctk.CTk()
-janela.title("RPG - Aventura")
-janela.resizable(False, False)
-
 
 
 canvas = ctk.CTkCanvas(
@@ -87,37 +106,33 @@ def desenhar_tabuleiro():
                 outline="black"
             )
 
-            lista = mapa.entidades.get((x, y), [])
-
-            inimigos = [
-                p for p in lista
-                if isinstance(p, Inimigo) and p.get_vida() > 0
+            lista = [
+                personagem
+                for personagem in mapa.entidades.get((x, y), [])
+                if personagem.get_vida() > 0
             ]
 
-            jogador = heroi is not None and (
-                heroi.posicao_x == x and
-                heroi.posicao_y == y and
-                heroi.get_vida() > 0
-            )
+            for indice, personagem in enumerate(lista):
+                if isinstance(personagem, Inimigo):
+                    icone = ICONES["Inimigo"]
+                elif isinstance(personagem, Guerreiro):
+                    icone = ICONES["Guerreiro"]
+                elif isinstance(personagem, Mago):
+                    icone = ICONES["Mago"]
+                elif isinstance(personagem, Sacerdote):
+                    icone = ICONES["Sacerdote"]
+                else:
+                    continue
 
-            if jogador and inimigos:
-                simbolo = "⚔"
-                cor = "purple"
+                deslocamento = 0
+                if len(lista) > 1:
+                    deslocamento = -8 if indice == 0 else 8
 
-            elif jogador:
-                simbolo = "J"
-                cor = "blue"
-
-            else:
-                continue
-
-            canvas.create_text(
-                x1 + TAMANHO_CELULA // 2,
-                y1 + TAMANHO_CELULA // 2,
-                text=simbolo,
-                fill=cor,
-                font=("Arial", 18, "bold")
-            )
+                canvas.create_image(
+                    x1 + TAMANHO_CELULA // 2 + deslocamento,
+                    y1 + TAMANHO_CELULA // 2,
+                    image=icone
+                )
 
 
 
@@ -459,6 +474,5 @@ def criar_personagem():
 janela.bind("<KeyPress>", mover_heroi)
 
 
-criar_personagem()
-
+janela.after(0, criar_personagem)
 janela.mainloop()
