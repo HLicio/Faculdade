@@ -57,6 +57,12 @@ O design do projeto foi concebido para demonstrar na prática os fundamentos de 
 * A versão CLI usa apenas a biblioteca padrão.
 * A versão GUI requer `customtkinter`, `CTkMessagebox` e `Pillow`.
 
+Para instalar as dependências da GUI:
+
+```bash
+pip install -r requirements.txt
+```
+
 ### Executando o jogo:
 ```bash
 python main.py
@@ -80,6 +86,7 @@ POO - Jogo RPG/
 ├── interface_cli.py  # Interface do jogo na versão Terminal
 ├── interface_gui.py  # Classe RPGApp e interface CustomTkinter
 ├── main.py           # Launcher que escolhe entre CLI e GUI
+├── requirements.txt   # Dependências externas do projeto
 ├── assets/           # Ícones dos personagens e inimigos
 └── README.md         # Documentação do projeto
 ```
