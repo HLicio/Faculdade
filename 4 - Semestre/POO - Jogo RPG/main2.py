@@ -1,6 +1,5 @@
-
-import tkinter as tk
-from tkinter import messagebox, simpledialog
+import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
 from classes import *
 
 
@@ -16,12 +15,13 @@ inimigo_atual = None
 
 
 
-janela = tk.Tk()
+janela = ctk.CTk()
 janela.title("RPG - Aventura")
 janela.resizable(False, False)
 
 
-canvas = tk.Canvas(
+
+canvas = ctk.CTkCanvas(
     janela,
     width=LARGURA * TAMANHO_CELULA,
     height=ALTURA * TAMANHO_CELULA,
@@ -31,14 +31,15 @@ canvas.pack(padx=10, pady=10)
 
 
 
-informacoes = tk.Label(
+
+informacoes = ctk.CTkLabel(
     janela,
     text="",
     font=("Arial", 12)
 )
 informacoes.pack()
 
-mensagem = tk.Label(
+mensagem = ctk.CTkLabel(
     janela,
     text="Use W, A, S, D para movimentar",
     font=("Arial", 11)
@@ -47,23 +48,23 @@ mensagem.pack(pady=5)
 
 
 
-painel_combate = tk.Frame(janela)
+painel_combate = ctk.CTkFrame(janela)
 
-titulo_combate = tk.Label(
+titulo_combate = ctk.CTkLabel(
     painel_combate,
     text="COMBATE",
     font=("Arial", 16, "bold")
 )
 titulo_combate.pack(pady=5)
 
-status_combate = tk.Label(
+status_combate = ctk.CTkLabel(
     painel_combate,
     text="",
     font=("Arial", 11)
 )
 status_combate.pack(pady=5)
 
-botoes = tk.Frame(painel_combate)
+botoes = ctk.CTkFrame(painel_combate)
 botoes.pack(pady=5)
 
 
@@ -134,7 +135,7 @@ def atualizar_status():
     if hasattr(heroi, "mana"):
         texto += f" | Mana: {heroi.mana}"
 
-    informacoes.config(text=texto)
+    informacoes.configure(text=texto)
 
 
 
@@ -153,14 +154,14 @@ def mover_heroi(event):
     resultado = heroi.mover(tecla, mapa)
 
     if resultado == "morto":
-        mensagem.config(text="Você está morto!")
+        mensagem.configure(text="Você está morto!")
         return
 
     if resultado == "parede":
-        mensagem.config(text="Você encontrou uma parede!")
+        mensagem.configure(text="Você encontrou uma parede!")
         return
 
-    mensagem.config(
+    mensagem.configure(
         text=f"Você se moveu para ({heroi.posicao_x}, {heroi.posicao_y})"
     )
 
@@ -182,7 +183,7 @@ def iniciar_combate(inimigo):
     em_combate = True
     inimigo_atual = inimigo
 
-    mensagem.config(
+    mensagem.configure(
         text=f"Você encontrou {inimigo.get_nome()}!"
     )
 
@@ -198,7 +199,7 @@ def atualizar_combate():
     if inimigo_atual is None:
         return
 
-    status_combate.config(
+    status_combate.configure(
         text=(
             f"Sua vida: {heroi.get_vida()}% | "
             f"Vida do inimigo: {inimigo_atual.get_vida()}%"
@@ -229,7 +230,7 @@ def turno_inimigo():
 
     dano = inimigo_atual.atacar(heroi)
 
-    mensagem.config(
+    mensagem.configure(
         text=f"O inimigo causou {dano} de dano!"
     )
 
@@ -251,9 +252,9 @@ def verificar_vitoria():
 
         mapa.remover_personagem(inimigo_atual)
 
-        messagebox.showinfo(
-            "Vitória!",
-            f"Você derrotou {nome}!"
+        CTkMessagebox(
+            title="Vitória!",
+            message=f"Você derrotou {nome}!"
         )
 
         finalizar_combate()
@@ -270,7 +271,7 @@ def ataque_basico():
 
     dano = heroi.atacar(inimigo_atual)
 
-    mensagem.config(
+    mensagem.configure(
         text=f"Você causou {dano} de dano!"
     )
 
@@ -305,7 +306,7 @@ def habilidade_especial():
 
             cura, critico = heroi.curar(heroi)
 
-            mensagem.config(
+            mensagem.configure(
                 text=f"Você recuperou {cura} de vida!"
             )
 
@@ -323,7 +324,7 @@ def habilidade_especial():
         if critico:
             texto += " ACERTO CRÍTICO!"
 
-        mensagem.config(text=texto)
+        mensagem.configure(text=texto)
 
         if verificar_vitoria():
             return
@@ -333,9 +334,10 @@ def habilidade_especial():
 
     except Exception as erro:
 
-        messagebox.showwarning(
-            "Erro",
-            str(erro)
+        CTkMessagebox(
+            title="Erro",
+            message=str(erro),
+            icon="warning"
         )
 
 
@@ -347,13 +349,13 @@ def fugir():
 
     if heroi.tentar_fugir():
 
-        mensagem.config(text="Você conseguiu fugir!")
+        mensagem.configure(text="Você conseguiu fugir!")
 
         finalizar_combate()
 
     else:
 
-        mensagem.config(text="Você não conseguiu fugir!")
+        mensagem.configure(text="Você não conseguiu fugir!")
 
         turno_inimigo()
 
@@ -365,30 +367,32 @@ def game_over():
 
     em_combate = True
 
-    messagebox.showerror(
-        "GAME OVER",
-        f"{heroi.get_nome()} foi derrotado!"
+    CTkMessagebox(
+        title="GAME OVER",
+        message=f"{heroi.get_nome()} foi derrotado!",
+        icon="warning"
     )
 
     janela.destroy()
 
 
 
-tk.Button(
+ctk.CTkButton(
     botoes,
     text="Ataque Básico",
     width=15,
     command=ataque_basico
 ).grid(row=0, column=0, padx=5)
 
-tk.Button(
+
+ctk.CTkButton(
     botoes,
     text="Habilidade Especial",
     width=18,
     command=habilidade_especial
 ).grid(row=0, column=1, padx=5)
 
-tk.Button(
+ctk.CTkButton(
     botoes,
     text="Fugir",
     width=10,
@@ -401,34 +405,34 @@ def criar_personagem():
 
     global heroi
 
-    nome = simpledialog.askstring(
-        "Personagem",
-        "Digite o nome do seu personagem:",
-        parent=janela
-    )
+    heroi = None
+
+    nome = ctk.CTkInputDialog(
+        title="Personagem",
+        text="Digite o nome do seu personagem:"
+    ).get_input()
+
 
     if not nome:
         janela.destroy()
         return
-
-    classe = simpledialog.askinteger(
-        "Classe",
-        "Escolha sua classe:\n\n"
+    
+    classe = ctk.CTkInputDialog(
+        title="Classe",
+        text="Escolha sua classe:\n\n"
         "1 - Guerreiro\n"
         "2 - Mago\n"
-        "3 - Sacerdote",
-        parent=janela,
-        minvalue=1,
-        maxvalue=3
-    )
-
-    if classe == 1:
+        "3 - Sacerdote"
+    ).get_input()
+    
+    
+    if classe == "1":
         heroi = Guerreiro(nome)
 
-    elif classe == 2:
+    elif classe == "2":
         heroi = Mago(nome)
 
-    elif classe == 3:
+    elif classe == "3":
         heroi = Sacerdote(nome)
 
     else:
@@ -445,7 +449,7 @@ def criar_personagem():
     atualizar_status()
     desenhar_tabuleiro()
 
-    mensagem.config(
+    mensagem.configure(
         text="Use W, A, S, D para movimentar seu personagem!"
     )
 
