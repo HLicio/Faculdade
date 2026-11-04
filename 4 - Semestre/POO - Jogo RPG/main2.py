@@ -254,7 +254,8 @@ def verificar_vitoria():
 
         CTkMessagebox(
             title="Vitória!",
-            message=f"Você derrotou {nome}!"
+            message=f"Você derrotou {nome}!",
+            icon="check"
         )
 
         finalizar_combate()
