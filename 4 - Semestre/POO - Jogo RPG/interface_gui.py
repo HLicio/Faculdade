@@ -3,7 +3,14 @@ from CTkMessagebox import CTkMessagebox
 from pathlib import Path
 from PIL import Image, ImageTk
 
-from modelo_jogo import Guerreiro, Inimigo, Mago, Sacerdote, Tabuleiro
+from modelo_jogo import (
+    Guerreiro,
+    Inimigo,
+    Mago,
+    Sacerdote,
+    Tabuleiro,
+    criar_partida,
+)
 
 
 class RPGApp(ctk.CTk):
@@ -331,19 +338,12 @@ class RPGApp(ctk.CTk):
             ),
         ).get_input()
 
-        classes = {
-            "1": Guerreiro,
-            "2": Mago,
-            "3": Sacerdote,
-        }
-        classe_selecionada = classes.get(classe)
-        if classe_selecionada is None:
+        try:
+            self.mapa, self.heroi, _ = criar_partida(nome, classe)
+        except ValueError:
             self.destroy()
             return
 
-        self.heroi = classe_selecionada(nome)
-        self.mapa.posicionar_personagem(self.heroi, 0, 0)
-        self.mapa.posicionar_personagem(Inimigo("Orc"), 1, 1)
         self.atualizar_status()
         self.desenhar_tabuleiro()
         self.mensagem.configure(

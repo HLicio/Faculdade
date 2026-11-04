@@ -209,3 +209,24 @@ class Inimigo(Personagem):
 
     def atacar(self, alvo):
         return super().atacar(alvo)
+
+
+def criar_partida(nome: str, classe: str):
+    classes = {
+        "1": Guerreiro,
+        "2": Mago,
+        "3": Sacerdote,
+    }
+    classe_selecionada = classes.get(str(classe).strip())
+
+    if classe_selecionada is None:
+        raise ValueError("Classe inválida.")
+
+    mapa = Tabuleiro()
+    heroi = classe_selecionada(nome)
+    inimigo = Inimigo("Orc")
+
+    mapa.posicionar_personagem(heroi, 0, 0)
+    mapa.posicionar_personagem(inimigo, 1, 1)
+
+    return mapa, heroi, inimigo

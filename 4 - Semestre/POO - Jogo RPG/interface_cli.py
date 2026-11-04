@@ -1,4 +1,4 @@
-from modelo_jogo import Inimigo, Mago, Sacerdote, Tabuleiro, Guerreiro
+from modelo_jogo import Inimigo, criar_partida
 
 
 def posicionar(mapa, personagem, x, y):
@@ -130,25 +130,15 @@ def mover_heroi(heroi, comando, mapa):
 
 def rodar_jogo():
 
-    mapa = Tabuleiro(largura=15, altura=15)
-
     print("--- CRIAÇÃO DE PERSONAGEM ---")
 
-    subclasse = int(input("Digite (1) para Guerreiro, (2) para Mago e (3) para Sacerdote: "))
+    subclasse = input("Digite (1) para Guerreiro, (2) para Mago e (3) para Sacerdote: ")
     nome = input("Digite o nome do seu Personagem: ")
-    if subclasse == 1:
-        heroi = Guerreiro(nome)
-    elif subclasse == 2:
-        heroi = Mago(nome)
-    elif subclasse == 3:
-        heroi = Sacerdote(nome)
-    else:
-        print("Opção não exite.")
-
-    orc = Inimigo("Orc")
-
-    posicionar(mapa, heroi, 0, 0)
-    posicionar(mapa, orc, 1, 1)
+    try:
+        mapa, heroi, _ = criar_partida(nome, subclasse)
+    except ValueError as erro:
+        print(erro)
+        return
 
     while heroi.get_vida() > 0:
         desenhar_tabuleiro(mapa)
