@@ -16,7 +16,7 @@ Faculdade/
 │       ├── main.c
 │       └── README.md
 │
-├── 2 - Semestre/
+├── 4 - Semestre/
 │   └── POO - Jogo RPG/           # Programação Orientada a Objetos (Python)
 │       ├── classes.py            # Modelagem OOP (Personagens, Classes, Tabuleiro)
 │       ├── main.py               # Jogo RPG - Versão Terminal
@@ -34,7 +34,7 @@ Faculdade/
 ### 📌 1º Semestre
 * **[1 - PCG (Princípios de Computação e Algoritmos)](./1%20-%20Semestre/1%20-%20PCG/)**: Sistema desenvolvido em Linguagem C com separação modular (frontend e backend).
 
-### 📌 2º Semestre
+### 📌 4º Semestre
 * **[POO - Jogo RPG em Python](./2%20-%20Semestre/POO%20-%20Jogo%20RPG/)**: Jogo de RPG em turnos com exploração de mapa e combate tático aplicando os pilares de POO:
   * Classes Abstratas (`ABC`)
   * Herança e Polimorfismo
@@ -59,7 +59,7 @@ Faculdade/
    ```
 2. Para jogar o RPG de POO:
    ```bash
-   cd "Faculdade/2 - Semestre/POO - Jogo RPG"
+   cd "Faculdade/4 - Semestre/POO - Jogo RPG"
    python main.py       # Versão Terminal
    python main2.py      # Versão Interface Gráfica
    ```
