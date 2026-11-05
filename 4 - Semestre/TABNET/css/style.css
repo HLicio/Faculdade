@@ -1,0 +1,8 @@
+body, button, input, select, textarea {
+    font-family: "rawline", sans-serif;
+}
+
+/* Ao clicar/focar no input do CPF */
+#cpf:focus {
+    background-color: #fff3cd; 
+}
