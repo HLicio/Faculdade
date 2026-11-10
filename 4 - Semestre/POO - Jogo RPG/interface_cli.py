@@ -1,4 +1,4 @@
-from modelo_jogo import Inimigo, criar_partida
+from modelo_jogo import DIFICULDADES, Inimigo, criar_partida
 
 
 def posicionar(mapa, personagem, x, y):
@@ -144,8 +144,12 @@ def rodar_jogo():
 
     subclasse = input("Digite (1) para Guerreiro, (2) para Mago e (3) para Sacerdote: ")
     nome = input("Digite o nome do seu Personagem: ")
+    print("\nDificuldade:")
+    for chave, (nome_dif, qtd) in DIFICULDADES.items():
+        print(f"  ({chave}) {nome_dif} - {qtd} inimigo(s)")
+    dificuldade = input("Escolha a dificuldade: ")
     try:
-        mapa, heroi, _ = criar_partida(nome, subclasse)
+        mapa, heroi, _ = criar_partida(nome, subclasse, dificuldade)
     except ValueError as erro:
         print(erro)
         return

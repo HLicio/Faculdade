@@ -214,8 +214,14 @@ class Inimigo(Personagem):
     def atacar(self, alvo):
         return super().atacar(alvo)
 
+DIFICULDADES = {
+    "1": ("Fácil", 1),
+    "2": ("Médio", 3),
+    "3": ("Difícil", 5),
+}
 
-def criar_partida(nome: str, classe: str):
+
+def criar_partida(nome: str, classe: str, dificuldade: str = "1"):
     classes = {
         "1": Guerreiro,
         "2": Mago,
@@ -226,19 +232,27 @@ def criar_partida(nome: str, classe: str):
     if classe_selecionada is None:
         raise ValueError("Classe inválida.")
 
+    config = DIFICULDADES.get(str(dificuldade).strip())
+    if config is None:
+        raise ValueError("Dificuldade inválida.")
+    _, qtd_inimigos = config
+ 
     mapa = Tabuleiro()
     heroi = classe_selecionada(nome)
-    inimigo = Inimigo("Orc")
-
     mapa.posicionar_personagem(heroi, 0, 0)
-    
-    posicao_inimigo_x = randint(0, mapa.largura - 1)
-    posicao_inimigo_y = randint(0, mapa.altura - 1)
-    
-    if posicao_inimigo_x == 0 and posicao_inimigo_y == 0:
-        posicao_inimigo_x = (posicao_inimigo_x + 1) % mapa.largura
-        posicao_inimigo_y = (posicao_inimigo_y + 1) % mapa.altura
-    
-    mapa.posicionar_personagem(inimigo, posicao_inimigo_x, posicao_inimigo_y)
-
-    return mapa, heroi, inimigo
+ 
+    casas_livres = [
+        (x, y)
+        for x in range(mapa.largura)
+        for y in range(mapa.altura)
+        if (x, y) != (0, 0)
+    ]
+    posicoes = random.sample(casas_livres, qtd_inimigos)
+ 
+    inimigos = []
+    for numero, (x, y) in enumerate(posicoes, start=1):
+        inimigo = Inimigo(f"Orc {numero}")
+        mapa.posicionar_personagem(inimigo, x, y)
+        inimigos.append(inimigo)
+ 
+    return mapa, heroi, inimigos
