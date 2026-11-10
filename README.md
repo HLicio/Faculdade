@@ -48,6 +48,9 @@ Faculdade/
 - **Rhuan Miguel**
 - GitHub: [@Rhazer01](https://github.com/Rhazer01)
 - Contato: [rhuanmiguel99113@gmail.com](mailto:rhuanmiguel99113@gmail.com)
+- **Henrique Barbosa**
+- Github: [@HLicio](https://github.com/HLicio)
+- Contato: [henriquelicio339@gmail.com]
 
 ---
 
