@@ -42,6 +42,15 @@ class Tabuleiro:
             if not lista:
                 del self.entidades[pos]
 
+    def inimigos_restantes(self) -> list:
+        """Retorna todos os inimigos vivos que ainda estão no tabuleiro."""
+        return [
+            p
+            for lista in self.entidades.values()
+            for p in lista
+            if isinstance(p, Inimigo) and p.get_vida() > 0
+        ]
+
 
 class Personagem(ABC):
     _nome: str
@@ -70,10 +79,10 @@ class Personagem(ABC):
 
     def receber_dano(self, dano) -> int:
         """Aplica o dano e retorna o dano real sofrido (após a defesa)."""
-        if self._vida == 0:
+        if self._vida <= 0:
             raise Exception(f"{self._nome} morto.")
         dano_real = max(0, dano - self.defesa)
-        self._vida -= dano_real
+        self._vida = max(0, self._vida - dano_real)
         return dano_real
 
     def atacar(self, alvo) -> int:
@@ -84,7 +93,7 @@ class Personagem(ABC):
 
     def receber_cura(self, cura) -> int:
         """Aplica a cura (máximo 100 de vida) e retorna o valor da cura."""
-        if self._vida == 0:
+        if self._vida <= 0:
             raise Exception(f"{self._nome} morto.")
         self._vida += cura
         if self._vida > 100:

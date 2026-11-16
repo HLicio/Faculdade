@@ -264,27 +264,29 @@ class RPGApp(ctk.CTk):
         self.desenhar_tabuleiro()
  
     def turno_inimigo(self):
-        if self.heroi.get_vida() <= 0:
-            self.game_over()
-            return
- 
+        """Executa o turno do inimigo. Retorna True se o herói morreu."""
         dano = self.inimigo_atual.atacar(self.heroi)
         self.mensagem.configure(text=f"O inimigo causou {dano} de dano!")
- 
-        if self.heroi.get_vida() <= 0:
-            self.atualizar_status()
-            self.game_over()
-            return
- 
-        self.atualizar_combate()
         self.atualizar_status()
- 
+
+        if self.heroi.get_vida() <= 0:
+            self.game_over()
+            return True
+
+        self.atualizar_combate()
+        return False
+
     def verificar_vitoria(self):
         if self.inimigo_atual.get_vida() > 0:
             return False
- 
+
         nome = self.inimigo_atual.get_nome()
         self.mapa.remover_personagem(self.inimigo_atual)
+
+        if not self.mapa.inimigos_restantes():
+            self.vitoria_final()
+            return True
+
         CTkMessagebox(
             master=self,
             title="Vitória!",
@@ -293,55 +295,67 @@ class RPGApp(ctk.CTk):
         )
         self.finalizar_combate()
         return True
- 
+
+    def vitoria_final(self):
+        self.em_combate = True  # bloqueia movimento e botões
+        msg = CTkMessagebox(
+            master=self,
+            title="Parabéns!",
+            message=f"Parabéns, {self.heroi.get_nome()}! Você derrotou todos os inimigos!",
+            icon="check",
+        )
+        msg.get()  # espera o jogador fechar a mensagem
+        self.destroy()
+
     def ataque_basico(self):
         if not self.em_combate:
             return
- 
+
         dano = self.heroi.atacar(self.inimigo_atual)
         self.mensagem.configure(text=f"Você causou {dano} de dano!")
+
         if self.verificar_vitoria():
             return
-        self.turno_inimigo()
+        if self.turno_inimigo():
+            return
         self.desenhar_tabuleiro()
- 
+
     def habilidade_especial(self):
         if not self.em_combate:
             return
- 
+
         try:
             if hasattr(self.heroi, "golpe_pesado"):
                 dano, critico = self.heroi.golpe_pesado(self.inimigo_atual)
-                nome_habilidade = "Golpe Pesado"
+                texto = f"Golpe Pesado: {dano} de dano!"
             elif hasattr(self.heroi, "magia_fogo"):
                 dano, critico = self.heroi.magia_fogo(self.inimigo_atual)
-                nome_habilidade = "Magia de Fogo"
+                texto = f"Magia de Fogo: {dano} de dano!"
             elif hasattr(self.heroi, "curar"):
                 cura, critico = self.heroi.curar(self.heroi)
-                self.mensagem.configure(text=f"Você recuperou {cura} de vida!")
-                self.atualizar_status()
-                self.atualizar_combate()
-                self.turno_inimigo()
-                return
+                texto = f"Você recuperou {cura} de vida!"
             else:
                 return
- 
-            texto = f"{nome_habilidade}: {dano} de dano!"
-            if critico:
-                texto += " ACERTO CRÍTICO!"
-            self.mensagem.configure(text=texto)
- 
-            if self.verificar_vitoria():
-                return
-            self.turno_inimigo()
-            self.desenhar_tabuleiro()
-        except Exception as erro:
+        except Exception as erro:  # ex.: mana insuficiente
             CTkMessagebox(
                 master=self,
                 title="Erro",
                 message=str(erro),
                 icon="warning",
             )
+            return
+
+        if critico:
+            texto += " ACERTO CRÍTICO!"
+        self.mensagem.configure(text=texto)
+        self.atualizar_status()
+        self.atualizar_combate()
+
+        if self.verificar_vitoria():
+            return
+        if self.turno_inimigo():
+            return
+        self.desenhar_tabuleiro()
  
     def fugir(self):
         if not self.em_combate:
@@ -355,13 +369,14 @@ class RPGApp(ctk.CTk):
             self.turno_inimigo()
  
     def game_over(self):
-        self.em_combate = True
-        CTkMessagebox(
+        self.em_combate = True  
+        msg = CTkMessagebox(
             master=self,
             title="GAME OVER",
-            message=f"{self.heroi.get_nome()} foi derrotado!",
-            icon="warning",
+            message=f"{self.heroi.get_nome()} morreu!",
+            icon="cancel",
         )
+        msg.get()  
         self.destroy()
  
     def criar_personagem(self):

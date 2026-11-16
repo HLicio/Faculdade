@@ -137,7 +137,6 @@ def mover_heroi(heroi, comando, mapa):
             if heroi.get_vida() <= 0:
                 break
 
-
 def rodar_jogo():
 
     print("--- CRIAÇÃO DE PERSONAGEM ---")
@@ -163,6 +162,10 @@ def rodar_jogo():
 
         if comando in ['W', 'S', 'A', 'D']:
             mover_heroi(heroi, comando, mapa)
+
+            if heroi.get_vida() > 0 and not mapa.inimigos_restantes():
+                print("\n🎉 PARABÉNS! Você derrotou todos os inimigos!")
+                break
         elif comando == 'Q':
             print("Saindo do jogo...")
             break
